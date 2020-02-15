@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "*.dart": "dart",
+        "*.c": "cpp",
+        "iostream": "cpp",
+        "random": "cpp",
+        "*.tcc": "cpp",
+        "streambuf": "cpp",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "cmath": "cpp",
+        "fstream": "cpp",
+        "new": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "ostream": "cpp"
+    }
+}

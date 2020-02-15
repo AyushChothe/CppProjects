@@ -7,14 +7,14 @@ typedef struct node
 {
 	string data;
 	node *next;
-} node;
+};
 
 class Stack
 {
 
-public:
 	node *head, *p;
 
+public:
 	int max;
 	int top;
 
@@ -43,6 +43,7 @@ public:
 			}
 
 			p->next = el;
+
 			top++;
 		}
 	}

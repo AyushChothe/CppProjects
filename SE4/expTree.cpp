@@ -1,6 +1,32 @@
 #include <iostream>
 #include <conio.h>
+#include <stack>
 using namespace std;
+
+string reverse(string str)
+{
+
+    string newStr = "";
+
+    for (int i = str.length() - 1, j = 0; i >= 0; i--, j++)
+    {
+        if (str[i] == '(')
+        {
+
+            newStr += ')';
+        }
+        else if (str[i] == ')')
+        {
+            newStr += '(';
+        }
+        else
+        {
+            newStr += str[i];
+        }
+    }
+
+    return newStr;
+}
 
 struct TreeNode
 {
@@ -252,37 +278,88 @@ public:
     }
     TreeNode *generateFromPostIn(string post, string in)
     {
-        if (in.length() == 1)
-        {
-            TreeNode *nd = new TreeNode();
-            nd->data = in;
+        return generateFromPreIn(reverse(post), in);
+    }
+    void printPreRec()
+    {
 
-            return nd;
+        TreeNode *p = new TreeNode;
+
+        p = root;
+
+        stack<TreeNode *> st;
+
+        if (ptr == NULL)
+        {
+            cout << "Tree is Empty!";
+            return;
         }
-        else if (post != "" && in != "")
-        {
-            string rt = post.substr(post.length() - 1, post.length());
-            int i = in.find_first_of(rt);
 
-            while (i == -1 && post.length() != 0)
+        while (p != NULL)
+        {
+            cout << p->data;
+
+            if (p->right != NULL)
             {
-                post = post.substr(0, post.length() - 1);
-                rt = post.substr(post.length() - 1, post.length());
-                i = in.find_first_of(rt);
+                st.push(p->right);
             }
 
-            if (rt != "" && i != -1)
+            if (p->left != NULL)
             {
-                TreeNode *nd = new TreeNode();
-                nd->data = rt;
-
-                nd->left = generateFromPostIn(post.substr(0, post.length() - 1), in.substr(0, i));
-                nd->right = generateFromPostIn(post.substr(0, post.length() - 1), in.substr(i + 1, in.length()));
-
-                return nd;
+                p = p->left;
+            }
+            else
+            {
+                if (!st.empty())
+                {
+                    p = st.top();
+                    st.pop();
+                }
+                else
+                {
+                    p = NULL;
+                }
             }
         }
-        return nullptr;
+    }
+    void printInRec()
+    {
+        TreeNode *p, *q = new TreeNode;
+
+        p = root;
+
+        stack<TreeNode *> st1, st2;
+
+        if (ptr == NULL)
+        {
+            cout << "Tree is Empty!";
+            return;
+        }
+        st1.push(p);
+        while (!st1.empty())
+        {
+            p = st1.top();
+            st2.push(p);
+            st1.pop();
+
+            if (p->left != NULL)
+            {
+                st1.push(p->left);
+            }
+            if (p->right != NULL)
+            {
+                st1.push(p->right);
+            }
+        }
+        while (!st2.empty())
+        {
+            p = st2.top();
+            cout << p->data;
+            st2.pop();
+        }
+    }
+    void printPostRec()
+    {
     }
     void setRoot(TreeNode *n)
     {
@@ -300,9 +377,11 @@ int main()
     t.setRoot(t.generateFromPreIn(preorder, preinorder));
 
     cout << "Pre:  ";
-    t.printPreOrder();
+    t.printPreRec();
     cout << "\nIn:   ";
     t.printInOrder();
+    cout << " : ";
+    t.printInRec();
     cout << "\nPost: ";
     t.printPostOrder();
 
@@ -314,14 +393,14 @@ int main()
     string postorder = "HIDEBJKFGCA";
     string postinorder = "HDIBEAJFKCG";
 
-    t.setRoot(t.generateFromPostIn(postorder, postinorder));
+    t.setRoot(t.generateFromPostIn(postorder, preinorder));
 
     cout << "Pre:  ";
     t.printPreOrder();
     cout << "\nIn:   ";
     t.printInOrder();
     cout << "\nPost: ";
-    t.printPostOrder();
+    t.printPostRec();
 
     cout << "\nTree:\n";
     t.display();

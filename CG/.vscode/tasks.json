@@ -1,0 +1,30 @@
+{
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "g++.exe build active file",
+      "command": "C:\\MinGW\\bin\\g++.exe",
+      "args": [
+        "-c",
+        "-o",
+        "${fileDirname}\\${fileBasenameNoExtension}.o",
+        "${fileDirname}\\${fileBasenameNoExtension}.cpp",
+        "-I\"C:\\Program Files\\Common Files\\MinGW\\freeglut\\include\"",
+        "--std=c++11",
+        "&&",
+        "C:\\MinGW\\bin\\g++.exe",
+        "-o",
+        "${fileDirname}\\${fileBasenameNoExtension}.exe",
+        "${fileDirname}\\${fileBasenameNoExtension}.o",
+        "-L\"C:\\Program Files\\Common Files\\MinGW\\freeglut\\lib\"",
+        "-lfreeglut",
+        "-lopengl32",
+        "-Wl,--subsystem,windows"
+      ],
+      "options": {
+        "cwd": "C:\\MinGW\\bin"
+      }
+    }
+  ],
+  "version": "2.0.0"
+}
