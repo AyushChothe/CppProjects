@@ -1,49 +1,101 @@
-/*
- *  As a first example of using OpenGL in C, this program draws the
- *  classic red/green/blue triangle.  It uses the default OpenGL
- *  coordinate system, in which x, y, and z are limited to the range
- *  -1 to 1, and the positive z-axis points into the screen.  Note
- *  that this coordinate system is hardly ever used in practice.
- *
- *  When compiling this program, you must link it to the OpenGL library
- *  and to the glut library. For example, in Linux using the gcc compiler, 
- *  it can be compiled with the command:
- *
- *          gcc -o first-triangle first-triangle.c -lGL -lglut
- */
 
+#include <GL/freeglut.h>
 #include <GL/gl.h>
-#include <GL/glut.h> // freeglut.h might be a better alternative, if available.
+#include <GL/glu.h>
+#include <GL/glut.h>
+
+#include <iostream>
+using namespace std;
+#include <stdlib.h>
+#include <math.h>
+
+//defining constants
+#define MAX_WIDTH 500
+#define MAX_HEIGHT 500
+
+int flag = 1;
+float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+
+void drawPixel(float x, float y)
+{
+
+    x = x / (MAX_WIDTH / 2);
+    y = y / (MAX_HEIGHT / 2);
+
+    glBegin(GL_POINTS);
+    //setting the pointer color
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex2f(x, y);
+
+    glEnd();
+    glFlush();
+}
+
+//dda implementation
+void dda(float m1, float n1, float m2, float n2)
+{
+
+    float step, Dx, Dy;
+    float dx, dy, length;
+
+    int i = 1;
+
+    dx = dy = length = 0.0;
+    step = Dx = Dy = 0.0;
+
+    dx = m2 - m1;
+    dy = n2 - n1;
+    step = dy / dx;
+
+    cout << m1 << "\t" << n1 << "\t" << m2 << "\t" << n2 << endl;
+
+    length = (dx >= dy) ? dx : dy;
+    cout << length << endl;
+
+    Dx = dx / length;
+    Dy = dy / length;
+
+    drawPixel(round(m1), round(n1));
+    cout << m1 << m2 << endl;
+
+    for (; i <= length; i++)
+    {
+        m1 = m1 + Dx;
+        n1 = n1 + Dy;
+        drawPixel(round(m1), round(n1));
+        cout << m1 << m2 << endl;
+    }
+}
+
+void Init()
+{
+    glClearColor(0.0, 0.0, 0.0, 0);
+    glPointSize(2);
+    gluOrtho2D(-320, 320, -240, 240);
+}
 
 void display()
-{ // Display function will draw the image.
-
-    glClearColor(0, 0, 0, 1); // (In fact, this is the default.)
+{
     glClear(GL_COLOR_BUFFER_BIT);
-
-    glBegin(GL_TRIANGLES);
-    glColor3f(1, 0, 0); // red
-    glVertex2f(-0.8, -0.8);
-    glColor3f(0, 1, 0); // green
-    glVertex2f(0.8, -0.8);
-    glColor3f(0, 0, 1); // blue
-    glVertex2f(0, 0.9);
-    glEnd();
-
-    glutSwapBuffers(); // Required to copy color buffer onto the screen.
+    dda(-200, -200, 0, 0);
+    dda(0, 0, 100, 50);
+    glFlush();
 }
 
 int main(int argc, char **argv)
-{ // Initialize GLUT and
+{
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE);    // Use single color buffer and no depth buffer.
-    glutInitWindowSize(500, 500);        // Size of display area, in pixels.
-    glutInitWindowPosition(100, 100);    // Location of window in screen coordinates.
-    glutCreateWindow("GL RGB Triangle"); // Parameter is window title.
-    glutDisplayFunc(display);            // Called when the window needs to be redrawn.
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(MAX_WIDTH, MAX_HEIGHT);
+    glutInitWindowPosition(100, 100);
+    glutCreateWindow("DDA Assignment");
 
-    glutMainLoop(); // Run the event loop!  This function does not return.
-                    // Program ends when user closes the window.
+    Init();
+
+    glutDisplayFunc(display);
+
+    glutMainLoop();
+
     return 0;
 }
